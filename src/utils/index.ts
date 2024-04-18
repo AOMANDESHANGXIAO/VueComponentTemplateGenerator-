@@ -2,61 +2,72 @@
 import { Params } from "../types/index";
 
 function generateVue2(params: Params): string {
-  const vue2Template = `<template>
-	<div></div>
-</template>
+  const vue2TemplateLines: string[] = [
+    "<template>", // 0
+    "	<div></div>", // 1
+    "</template>", // 2
+    "", // 3
+    `<script${params.script.lang ? ` lang="${params.script.lang}"` : ""}>`, //4
+    "export default {", //5
+    `${params.componentName.isExist ? "    name: '" + params.name + "'," : ""}`, // 6
+    "    props: {",
+    "",
+    "    },",
+    "    data() {",
+    "        return {",
+    "",
+    "        }",
+    "    },",
+    "    computed: {",
+    "",
+    "    },",
+    "    created() {",
+    "",
+    "    },",
+    "    mounted() {",
+    "",
+    "    },",
+    "    methods: {",
+    "",
+    "    },",
+    "}",
+    "</script>",
+    "",
+    `<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${
+      params.style.scoped ? " scoped" : ""
+    }>`,
+    "",
+    "</style>",
+  ];
+  //   如果第六行为空，则移除之
+  if (!params.componentName.isExist) {
+    vue2TemplateLines.splice(6, 1);
+  }
 
-<script${params.script.lang?` lang="${params.script.lang}"`:''}${params.script.setup?` setup`:''}>
-export default {
-	name: '${params.name}',
-    props: {
-
-    },
-    data() {
-        return {
-
-        }
-    },
-    computed: {
-
-    },
-    created() {
-
-    },
-    mounted() {
-
-    },
-    methods: {
-
-    },
-}
-
-</script>
-
-<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${params.style.scoped ? " scoped" : ""}>
-
-</style>
-`;
-  return vue2Template;
+  return vue2TemplateLines.join("\n");
 }
 
 function generateVue3(params: Params): string {
-  const vue3Template = `<script${params.script.lang?` lang="${params.script.lang}"`:''}${params.script.setup?` setup`:''}>
-defineOptions({
-    name: '${params.name}'
-})
+  const name = `defineOptions({\n    name: '${params.name}'\n})`;
 
-</script>
-
-<template>
-    <div></div>
-</template>
-
-<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${params.style.scoped ? " scoped" : ""}>
-
-</style>
-`;
-  return vue3Template;
+  const vue3TemplateLines: string[] = [
+    `<script${params.script.lang ? ` lang="${params.script.lang}"` : ""}${
+      params.script.setup ? " setup" : ""
+    }>`, // 0
+    `${params.componentName.isExist ? name : ""}`, // 1
+    "</script>",
+    '',
+    "<template>",
+    "    <div></div>",
+    "</template>",
+    '',
+    `<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${
+      params.style.scoped ? " scoped" : ""
+    }>`,
+    "",
+    "</style>",
+  ];
+  return vue3TemplateLines.join("\n");
 }
 function generateTemplate(params: Params): string {
   if (params.vueVersion === "2") {

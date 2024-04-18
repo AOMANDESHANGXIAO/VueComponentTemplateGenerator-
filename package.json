@@ -53,6 +53,16 @@
           "type": "boolean",
           "default": true,
           "description": "Indicate whether the generated `<style>` tag should have the 'scoped' attribute, which limits the style rules to affect only the current component."
+        },
+        "autoVueTemplate.componentName.isExist": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether the generated component template generates a name based on your file name in the options."
+        },
+        "autoVueTemplate.componentName.isHump": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the generated component name is named with the hump nomenclature, if false, the generated component name is concatenated with -. Automatically converts filenames you name using the hump nomenclature to concatenated with -"
         }
       }
     }

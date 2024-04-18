@@ -1,16 +1,18 @@
 import * as vscode from "vscode";
 import { getCurrentFileName } from "./utils/tool";
 import { generateTemplate } from "./utils/index";
-import { Params, Script, Style } from "./types/index";
+import { Params, Script, Style, ComponentName } from "./types/index";
 
 let vueVersion: string;
 let script: Script;
 let style: Style;
+let componentName: ComponentName;
 function updateConfig() {
   const config = vscode.workspace.getConfiguration("autoVueTemplate");
   vueVersion = config.get("vueVersion") as string;
   script = config.get("script") as Script;
   style = config.get("style") as Style;
+  componentName = config.get("componentName") as ComponentName;
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -37,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
       script: script,
       name: getCurrentFileName(),
       style: style,
+	  componentName: componentName
     };
     editor.insertSnippet(
       new vscode.SnippetString(generateTemplate(params)),
