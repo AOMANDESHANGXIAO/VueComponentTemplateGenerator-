@@ -1,6 +1,5 @@
-# VSCODE-Vue一键生成模板框架插件
-
-本插件支持Vue2和Vue3的组件模板生成。
+# Vue Component Template Generator
+简介：本项目为Vscode的一款插件。旨在为使用Vue的前端开发者提供快速生成可自定义的组件模板的功能。对于Vue2和Vue3都适用。
 
 ## 配置可选项
 
