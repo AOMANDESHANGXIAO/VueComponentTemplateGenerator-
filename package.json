@@ -14,10 +14,48 @@
   "contributes": {
     "commands": [
       {
-        "command": "autovuetemplate.helloWorld",
-        "title": "Hello World"
+        "command": "autovuetemplate.v3t",
+        "title": "v3t"
       }
-    ]
+    ],
+    "keybindings":[
+      {
+        "command": "autovuetemplate.v3t",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration":{
+      "title": "Vue.js Component Template Generator Configurations",
+      "properties": {
+        "autoVueTemplate.vueVersion": {
+          "type": "string",
+          "default": "3",
+          "description": "Select the Vue version to use for generated templates: Vue 2 or Vue 3."
+        },
+        "autoVueTemplate.script.lang": {
+          "type": "string",
+          "default": "",
+          "description": "Specify the language for the `<script>` tag in the generated template. Options: 'ts' (TypeScript), 'js' (JavaScript), or leave empty for no explicit language attribute."
+        },
+        "autoVueTemplate.script.setup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable the usage of `<script setup>` syntax in generated Vue 3 templates. Note that this option is applicable only when using Vue 3"
+        },
+        "autoVueTemplate.style.lang": {
+          "type": "string",
+          "default": "",
+          "description": "Set the language for the `<style>` tag in the generated template, such as 'scss', 'less', or 'stylus'. Leave empty for standard CSS."
+        },
+        "autoVueTemplate.style.scoped": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicate whether the generated `<style>` tag should have the 'scoped' attribute, which limits the style rules to affect only the current component."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",

@@ -1,25 +1,51 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { getCurrentFileName } from "./utils/tool";
+import { generateTemplate } from "./utils/index";
+import { Params, Script, Style } from "./types/index";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+let vueVersion: string;
+let script: Script;
+let style: Style;
+function updateConfig() {
+  const config = vscode.workspace.getConfiguration("autoVueTemplate");
+  vueVersion = config.get("vueVersion") as string;
+  script = config.get("script") as Script;
+  style = config.get("style") as Style;
+}
+
 export function activate(context: vscode.ExtensionContext) {
+  // 初始化配置项
+  updateConfig();
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "autovuetemplate" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('autovuetemplate.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from autoVueTemplate!');
-	});
-
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration("autoVueTemplate")) {
+        updateConfig();
+      }
+    })
+  );
+  // 注册命令，用户输入v3t时就会生成Vue3的模板
+  const v3t = () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage("No active text editor found.");
+      return;
+    }
+    // 给定参数
+    const params: Params = {
+      vueVersion: vueVersion,
+      script: script,
+      name: getCurrentFileName(),
+      style: style,
+    };
+    editor.insertSnippet(
+      new vscode.SnippetString(generateTemplate(params)),
+      editor.selection.active
+    );
+  };
+  context.subscriptions.push(
+    vscode.commands.registerCommand("autovuetemplate.v3t", v3t)
+  );
 }
 
 // This method is called when your extension is deactivated

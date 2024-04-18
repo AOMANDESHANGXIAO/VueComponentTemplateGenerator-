@@ -1,71 +1,16 @@
-# autovuetemplate README
+# VSCODE-Vue一键生成模板框架插件
 
-This is the README for your extension "autovuetemplate". After writing up a brief description, we recommend including the following sections.
+本插件支持Vue2和Vue3的组件模板生成。
 
-## Features
+## 配置可选项
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+| 参数                 | 描述                                                         | 可选项                     | 默认值 |
+| -------------------- | ------------------------------------------------------------ | -------------------------- | ------ |
+| vueVersion           | 控制生成的是vue2还是vue3的代码                               | 2 \| 3                     | 3      |
+| script.lang          | 控制生成的script标签中的编程语言选项                         | ''\|'js'\|'ts'             | ''     |
+| script.setup         | 只有vueVersion为3时才有效，为script标签带上setup选项         | true \| false              | true   |
+| style.name           | 控制生成的style标签中的css预处理器                           | ''\|'scss'\|'sass'\|'less' | ''     |
+| style.scoped         | 控制生成的style标签中是否携带scoped选项                      | true \| false              | false  |
+| componentName.isOpen | 控制生成的组件模板是否在选项里根据你的文件名生成name         | true \| false              | false  |
+| componentName.isHump | 生成的组件名称是否以驼峰命名，如果为false，则生成的组件名会以 - 连接。将你已驼峰命名法命名的组件名自动转换为以-相连 | true \| false              | false  |
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
