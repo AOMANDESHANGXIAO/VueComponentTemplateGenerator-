@@ -27,41 +27,41 @@
       }
     ],
     "configuration":{
-      "title": "Vue.js Component Template Generator Configurations",
+      "title": "Vue Component Template Generator Configurations",
       "properties": {
         "autoVueTemplate.vueVersion": {
-          "type": "string",
-          "default": "3",
+          "type": "array",
+          "default": [3],
           "description": "Select the Vue version to use for generated templates: Vue 2 or Vue 3."
         },
         "autoVueTemplate.script.lang": {
-          "type": "string",
-          "default": "",
+          "type": "array",
+          "default": [""],
           "description": "Specify the language for the `<script>` tag in the generated template. Options: 'ts' (TypeScript), 'js' (JavaScript), or leave empty for no explicit language attribute."
         },
         "autoVueTemplate.script.setup": {
-          "type": "boolean",
-          "default": true,
+          "type": "array",
+          "default": [true],
           "description": "Enable or disable the usage of `<script setup>` syntax in generated Vue 3 templates. Note that this option is applicable only when using Vue 3"
         },
         "autoVueTemplate.style.lang": {
-          "type": "string",
-          "default": "",
+          "type": "array",
+          "default": [""],
           "description": "Set the language for the `<style>` tag in the generated template, such as 'scss', 'less', or 'stylus'. Leave empty for standard CSS."
         },
         "autoVueTemplate.style.scoped": {
-          "type": "boolean",
-          "default": true,
+          "type": "array",
+          "default": [true],
           "description": "Indicate whether the generated `<style>` tag should have the 'scoped' attribute, which limits the style rules to affect only the current component."
         },
         "autoVueTemplate.componentName.isExist": {
-          "type": "boolean",
-          "default": true,
+          "type": "array",
+          "default": [true],
           "description": "Controls whether the generated component template generates a name based on your file name in the options."
         },
         "autoVueTemplate.componentName.isHump": {
-          "type": "boolean",
-          "default": true,
+          "type": "array",
+          "default": [true],
           "description": "Whether the generated component name is named with the hump nomenclature, if false, the generated component name is concatenated with -. Automatically converts filenames you name using the hump nomenclature to concatenated with -"
         }
       }

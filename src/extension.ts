@@ -9,10 +9,10 @@ let style: Style;
 let componentName: ComponentName;
 function updateConfig() {
   const config = vscode.workspace.getConfiguration("autoVueTemplate");
-  vueVersion = config.get("vueVersion") as string;
-  script = config.get("script") as Script;
-  style = config.get("style") as Style;
-  componentName = config.get("componentName") as ComponentName;
+  vueVersion = config.get("vueVersion")[0] as string;
+  script = config.get("script")[0] as Script;
+  style = config.get("style")[0] as Style;
+  componentName = config.get("componentName")[0] as ComponentName;
 }
 
 export function activate(context: vscode.ExtensionContext) {
