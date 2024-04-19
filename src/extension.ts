@@ -11,11 +11,11 @@ let script: Script;
 let style: Style;
 let componentName: ComponentName;
 
-function getTemplate() {
+function getTemplate(newFileName: string = "") {
   const params: Params = {
     vueVersion: vueVersion,
     script: script,
-    name: getCurrentFileName(componentName),
+    name: getCurrentFileName(componentName, newFileName),
     style: style,
     componentName: componentName,
   };
@@ -57,7 +57,7 @@ async function listenCreateFiles() {
           vscode.window.showInformationMessage("created a Vue file!");
           vscode.workspace.fs.writeFile(
             vscode.Uri.file(file.fsPath),
-            Buffer.from(getTemplate())
+            Buffer.from(getTemplate(fileName))
           );
         }
       }
