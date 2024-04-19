@@ -11,14 +11,7 @@ let script: Script;
 let style: Style;
 let componentName: ComponentName;
 
-// 注册命令，用户输入v3t时就会生成Vue3的模板
-const vt = () => {
-  const editor = vscode.window.activeTextEditor;
-  if (!editor) {
-    vscode.window.showErrorMessage("No active text editor found.");
-    return;
-  }
-  // 给定参数
+function getTemplate() {
   const params: Params = {
     vueVersion: vueVersion,
     script: script,
@@ -26,8 +19,18 @@ const vt = () => {
     style: style,
     componentName: componentName,
   };
+  return generateTemplate(params);
+}
+
+// 注册命令，用户输入v3t时就会生成Vue3的模板
+const vt = () => {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    vscode.window.showErrorMessage("No active text editor found.");
+    return;
+  }
   editor.insertSnippet(
-    new vscode.SnippetString(generateTemplate(params)),
+    new vscode.SnippetString(getTemplate()),
     editor.selection.active
   );
 };
@@ -42,20 +45,22 @@ function updateConfig() {
   componentName = config.get(`${option}.componentName`) as ComponentName;
 }
 
-function listenCreateFiles() {
-  vscode.window.showInformationMessage("监听文件创建事件"); 
+async function listenCreateFiles() {
+  vscode.window.showInformationMessage("监听文件创建事件");
   vscode.workspace.onDidCreateFiles((event: vscode.FileCreateEvent) => {
     vscode.window.showInformationMessage("created a file!");
-    if(auto) {
-      for(const file of event.files) {
-        const fileName = file.fsPath.split('/').pop();
-        const fileExtension = fileName?.split('.').pop();
-        if(fileExtension === '5vue') {
+    if (auto) {
+      for (const file of event.files) {
+        const fileName = file.fsPath.split("/").pop();
+        const fileExtension = fileName?.split(".").pop();
+        if (fileExtension === "vue") {
           vscode.window.showInformationMessage("created a Vue file!");
-          vt();
+          vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file.fsPath),
+            Buffer.from(getTemplate())
+          );
         }
       }
-      
     }
   });
 }
