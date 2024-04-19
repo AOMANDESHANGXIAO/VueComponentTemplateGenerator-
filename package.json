@@ -14,52 +14,71 @@
   "contributes": {
     "commands": [
       {
-        "command": "autovuetemplate.v3t",
-        "title": "v3t"
+        "command": "autovuetemplate.vt",
+        "title": "vt"
       }
     ],
-    "keybindings":[
+    "keybindings": [
       {
-        "command": "autovuetemplate.v3t",
+        "command": "autovuetemplate.vt",
         "key": "ctrl+shift+t",
         "mac": "cmd+shift+t",
         "when": "editorTextFocus"
       }
     ],
-    "configuration":{
-      "title": "Vue.js Component Template Generator Configurations",
+    "configuration": {
+      "title": "Vue Component Template Generator Configurations",
       "properties": {
-        "autoVueTemplate.vueVersion": {
+        "autoVueTemplate.auto": {
+          "type": "boolean",
+          "default":false,
+          "description": "Auto generate template when you create a new file"
+        },
+        "autoVueTemplate.allTemplates": {
+          "type": "array",
+          "default": [
+            {
+              "name": "default Template",
+              "option": "default"
+            }
+          ]
+        },
+        "autoVueTemplate.option": {
+          "type": "string",
+          "default": "default",
+          "description": "Select the template options"
+        },
+        "autoVueTemplate.default.vueVersion": {
           "type": "string",
           "default": "3",
           "description": "Select the Vue version to use for generated templates: Vue 2 or Vue 3."
         },
-        "autoVueTemplate.script.lang": {
+        "autoVueTemplate.default.script.lang": {
           "type": "string",
           "default": "",
           "description": "Specify the language for the `<script>` tag in the generated template. Options: 'ts' (TypeScript), 'js' (JavaScript), or leave empty for no explicit language attribute."
         },
-        "autoVueTemplate.script.setup": {
+        "autoVueTemplate.default.script.setup": {
           "type": "boolean",
           "default": true,
           "description": "Enable or disable the usage of `<script setup>` syntax in generated Vue 3 templates. Note that this option is applicable only when using Vue 3"
         },
-        "autoVueTemplate.style.lang": {
+        "autoVueTemplate.default.style.lang": {
           "type": "string",
           "default": "",
           "description": "Set the language for the `<style>` tag in the generated template, such as 'scss', 'less', or 'stylus'. Leave empty for standard CSS."
         },
-        "autoVueTemplate.style.scoped": {
+        "autoVueTemplate.default.style.scoped": {
           "type": "boolean",
           "default": true,
           "description": "Indicate whether the generated `<style>` tag should have the 'scoped' attribute, which limits the style rules to affect only the current component."
         },
-        "autoVueTemplate.componentName.isExist": {
+        "autoVueTemplate.default.componentName.isExist": {
           "type": "boolean",
           "default": true,
           "description": "Controls whether the generated component template generates a name based on your file name in the options."
         },
-        "autoVueTemplate.componentName.isHump": {
+        "autoVueTemplate.default.componentName.isHump": {
           "type": "boolean",
           "default": true,
           "description": "Whether the generated component name is named with the hump nomenclature, if false, the generated component name is concatenated with -. Automatically converts filenames you name using the hump nomenclature to concatenated with -"

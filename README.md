@@ -12,4 +12,5 @@
 | style.scoped         | 控制生成的style标签中是否携带scoped选项                      | true \| false              | false  |
 | componentName.isOpen | 控制生成的组件模板是否在选项里根据你的文件名生成name         | true \| false              | false  |
 | componentName.isHump | 生成的组件名称是否以驼峰命名，如果为false，则生成的组件名会以 - 连接。将你已驼峰命名法命名的组件名自动转换为以-相连 | true \| false              | false  |
+| auto                 | 当你创建文件后，是否根据你的配置自动生成组件模板             | true \| false              | false  |
 
