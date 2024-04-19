@@ -3,21 +3,72 @@ import { getCurrentFileName } from "./utils/tool";
 import { generateTemplate } from "./utils/index";
 import { Params, Script, Style, ComponentName } from "./types/index";
 
+let auto: boolean;
+let option: string;
+
 let vueVersion: string;
 let script: Script;
 let style: Style;
 let componentName: ComponentName;
+
+function getTemplate() {
+  const params: Params = {
+    vueVersion: vueVersion,
+    script: script,
+    name: getCurrentFileName(componentName),
+    style: style,
+    componentName: componentName,
+  };
+  return generateTemplate(params);
+}
+
+// 注册命令，用户输入v3t时就会生成Vue3的模板
+const vt = () => {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    vscode.window.showErrorMessage("No active text editor found.");
+    return;
+  }
+  editor.insertSnippet(
+    new vscode.SnippetString(getTemplate()),
+    editor.selection.active
+  );
+};
+
 function updateConfig() {
   const config = vscode.workspace.getConfiguration("autoVueTemplate");
-  vueVersion = config.get("vueVersion")[0] as string;
-  script = config.get("script")[0] as Script;
-  style = config.get("style")[0] as Style;
-  componentName = config.get("componentName")[0] as ComponentName;
+  auto = config.get("auto") as boolean;
+  option = config.get("option") as string;
+  vueVersion = config.get(`${option}.vueVersion`) as string;
+  script = config.get(`${option}.script`) as Script;
+  style = config.get(`${option}.style`) as Style;
+  componentName = config.get(`${option}.componentName`) as ComponentName;
+}
+
+async function listenCreateFiles() {
+  vscode.window.showInformationMessage("监听文件创建事件");
+  vscode.workspace.onDidCreateFiles((event: vscode.FileCreateEvent) => {
+    vscode.window.showInformationMessage("created a file!");
+    if (auto) {
+      for (const file of event.files) {
+        const fileName = file.fsPath.split("/").pop();
+        const fileExtension = fileName?.split(".").pop();
+        if (fileExtension === "vue") {
+          vscode.window.showInformationMessage("created a Vue file!");
+          vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file.fsPath),
+            Buffer.from(getTemplate())
+          );
+        }
+      }
+    }
+  });
 }
 
 export function activate(context: vscode.ExtensionContext) {
   // 初始化配置项
   updateConfig();
+  listenCreateFiles();
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
@@ -26,28 +77,8 @@ export function activate(context: vscode.ExtensionContext) {
       }
     })
   );
-  // 注册命令，用户输入v3t时就会生成Vue3的模板
-  const v3t = () => {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      vscode.window.showErrorMessage("No active text editor found.");
-      return;
-    }
-    // 给定参数
-    const params: Params = {
-      vueVersion: vueVersion,
-      script: script,
-      name: getCurrentFileName(),
-      style: style,
-	  componentName: componentName
-    };
-    editor.insertSnippet(
-      new vscode.SnippetString(generateTemplate(params)),
-      editor.selection.active
-    );
-  };
   context.subscriptions.push(
-    vscode.commands.registerCommand("autovuetemplate.v3t", v3t)
+    vscode.commands.registerCommand("autovuetemplate.vt", vt)
   );
 }
 
