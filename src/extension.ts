@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getCurrentFileName } from "./utils/tool";
 import { generateTemplate } from "./utils/index";
-import { Params, Script, Style, ComponentName } from "./types/index";
+import { Params, Script, Style, ComponentName, Sequence } from "./types/index";
 
 let auto: boolean;
 let option: string;
@@ -10,7 +10,7 @@ let vueVersion: string;
 let script: Script;
 let style: Style;
 let componentName: ComponentName;
-
+let sequence: Sequence;
 function getTemplate(newFileName: string = "") {
   const params: Params = {
     vueVersion: vueVersion,
@@ -18,6 +18,7 @@ function getTemplate(newFileName: string = "") {
     name: getCurrentFileName(componentName, newFileName),
     style: style,
     componentName: componentName,
+    sequence: sequence
   };
   return generateTemplate(params);
 }
@@ -43,18 +44,19 @@ function updateConfig() {
   script = config.get(`${option}.script`) as Script;
   style = config.get(`${option}.style`) as Style;
   componentName = config.get(`${option}.componentName`) as ComponentName;
+  sequence = config.get(`${option}.sequence`) as Sequence;
 }
 
 async function listenCreateFiles() {
-  vscode.window.showInformationMessage("监听文件创建事件");
+  // vscode.window.showInformationMessage("监听文件创建事件");
   vscode.workspace.onDidCreateFiles((event: vscode.FileCreateEvent) => {
-    vscode.window.showInformationMessage("created a file!");
+    // vscode.window.showInformationMessage("created a file!");
     if (auto) {
       for (const file of event.files) {
         const fileName = file.fsPath.split("/").pop();
         const fileExtension = fileName?.split(".").pop();
         if (fileExtension === "vue") {
-          vscode.window.showInformationMessage("created a Vue file!");
+          // vscode.window.showInformationMessage("created a Vue file!");
           vscode.workspace.fs.writeFile(
             vscode.Uri.file(file.fsPath),
             Buffer.from(getTemplate(fileName))

@@ -9,7 +9,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
@@ -82,6 +84,11 @@
           "type": "boolean",
           "default": true,
           "description": "Whether the generated component name is named with the hump nomenclature, if false, the generated component name is concatenated with -. Automatically converts filenames you name using the hump nomenclature to concatenated with -"
+        },
+        "autoVueTemplate.default.sequence":{
+          "type":"array",
+          "default":["script", "template", "style"],
+          "description":"The order of the components in the generated template"
         }
       }
     }

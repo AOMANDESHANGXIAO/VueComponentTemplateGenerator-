@@ -3,7 +3,8 @@ interface Params {
   name: string; // 根据文件名填写组件的名称
   script: Script;
   style: Style;
-  componentName: ComponentName
+  componentName: ComponentName,
+  sequence: Sequence
 }
 interface Script {
   lang: string;
@@ -17,4 +18,5 @@ interface ComponentName {
   isExist: boolean;
   isHump: boolean;
 }
-export { Params, Script, Style, ComponentName };
+type Sequence = ("script" | "template" | "style")[];
+export { Params, Script, Style, ComponentName,Sequence };

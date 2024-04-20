@@ -6,7 +6,7 @@ function getCurrentFileName(componentName: ComponentName, newFileName: string) {
   // 1. 如果没有传入新的文件名，就获取当前打开的文件名
 
   let fileName: string;
-  if (newFileName) {
+  if (!newFileName) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
       vscode.window.showWarningMessage("No active text editor found.");
@@ -20,7 +20,7 @@ function getCurrentFileName(componentName: ComponentName, newFileName: string) {
     //   去除文件扩展名
     fileName = path.parse(baseName).name;
   } else {
-    fileName = newFileName;
+    fileName = path.parse(path.basename(newFileName)).name;
   }
   let kebabCaseName: string;
   if (!componentName.isHump) {

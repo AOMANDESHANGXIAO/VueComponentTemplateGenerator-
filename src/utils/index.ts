@@ -2,14 +2,16 @@
 import { Params } from "../types/index";
 
 function generateVue2(params: Params): string {
-  const vue2TemplateLines: string[] = [
+  const tagDict = new Map();
+  const templateTem = [
     "<template>", // 0
     "	<div></div>", // 1
-    "</template>", // 2
-    "", // 3
-    `<script${params.script.lang ? ` lang="${params.script.lang}"` : ""}>`, //4
-    "export default {", //5
-    `${params.componentName.isExist ? "    name: '" + params.name + "'," : ""}`, // 6
+    "</template>", // 2]
+  ];
+  let scriptTem = [
+    `<script${params.script.lang ? ` lang="${params.script.lang}"` : ""}>`, //0
+    "export default {", //1
+    `${params.componentName.isExist ? "    name: '" + params.name + "'," : ""}`, // 2
     "    props: {",
     "",
     "    },",
@@ -32,41 +34,67 @@ function generateVue2(params: Params): string {
     "    },",
     "}",
     "</script>",
-    "",
+  ];
+  const styleTem = [
     `<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${
       params.style.scoped ? " scoped" : ""
     }>`,
     "",
     "</style>",
   ];
-  //   如果第六行为空，则移除之
+  // 如果用户不需要给组件取名，则将取名这一行从scriptTem删除
   if (!params.componentName.isExist) {
-    vue2TemplateLines.splice(6, 1);
+    scriptTem.splice(2, 1);
   }
+  tagDict.set("template", templateTem);
+  tagDict.set("script", scriptTem);
+  tagDict.set("style", styleTem);
 
+  let vue2TemplateLines: string[] = [];
+
+  // 遍历sequence列表
+  for (let i = 0; i < params.sequence.length; i++) {
+    const tag = params.sequence[i];
+    if (tagDict.has(tag)) {
+      vue2TemplateLines = [...vue2TemplateLines, ...tagDict.get(tag), ""];
+    }
+  }
   return vue2TemplateLines.join("\n");
 }
 
 function generateVue3(params: Params): string {
+  const tagDict = new Map();
+  const templateTem = [
+    "<template>", // 0
+    "	<div></div>", // 1
+    "</template>", // 2
+  ];
   const name = `defineOptions({\n    name: '${params.name}'\n})`;
-
-  const vue3TemplateLines: string[] = [
+  let scriptTem = [
     `<script${params.script.lang ? ` lang="${params.script.lang}"` : ""}${
       params.script.setup ? " setup" : ""
     }>`, // 0
     `${params.componentName.isExist ? name : ""}`, // 1
     "</script>",
-    '',
-    "<template>",
-    "    <div></div>",
-    "</template>",
-    '',
+  ];
+  const styleTem = [
     `<style${params.style.lang ? ` lang="${params.style.lang}"` : ""}${
       params.style.scoped ? " scoped" : ""
     }>`,
     "",
     "</style>",
   ];
+  tagDict.set("template", templateTem);
+  tagDict.set("script", scriptTem);
+  tagDict.set("style", styleTem);
+  let vue3TemplateLines: string[] = [];
+  // 遍历sequence列表
+  for (let i = 0; i < params.sequence.length; i++) {
+    const tag = params.sequence[i];
+    if (tagDict.has(tag)) {
+      vue3TemplateLines = [...vue3TemplateLines, ...tagDict.get(tag), ""];
+    }
+  }
   return vue3TemplateLines.join("\n");
 }
 function generateTemplate(params: Params): string {
