@@ -1,24 +1,21 @@
 import * as vscode from "vscode";
 import { getCurrentFileName } from "./utils/tool";
 import { generateTemplate } from "./utils/index";
-import { Params, Script, Style, ComponentName, Sequence } from "./types/index";
+import {
+  Params,
+  allTemplates,
+  TemplateConfig
+} from "./types/index";
 
 let auto: boolean;
-let option: string;
 
-let vueVersion: string;
-let script: Script;
-let style: Style;
-let componentName: ComponentName;
-let sequence: Sequence;
+let allTemplates: allTemplates; // 数组中存放的所有模板
+// let allOptions: Array<string>; // 显示给用户看的所有模板名称，便于选择
+let templateConfig: TemplateConfig;
 function getTemplate(newFileName: string = "") {
   const params: Params = {
-    vueVersion: vueVersion,
-    script: script,
-    name: getCurrentFileName(componentName, newFileName),
-    style: style,
-    componentName: componentName,
-    sequence: sequence
+    ...templateConfig,
+    name: getCurrentFileName(templateConfig.componentName, newFileName),
   };
   return generateTemplate(params);
 }
@@ -36,18 +33,35 @@ const vt = () => {
   );
 };
 
-function updateConfig() {
+function updateConfig(selectOption: any = null) {
+  if(selectOption) {
+    // vscode.window.showInformationMessage(">>>选择模板成功<<<")
+    templateConfig = selectOption;
+    // 把设置中的选项也更新
+    const config = vscode.workspace.getConfiguration("autoVueTemplate");
+    config.update("option", selectOption.key, true);
+    return;
+  }
   const config = vscode.workspace.getConfiguration("autoVueTemplate");
+  let allTemplates = config.get("allTemplates") as allTemplates;
+  let option = config.get("option") as string;
   auto = config.get("auto") as boolean;
-  option = config.get("option") as string;
-  vueVersion = config.get(`${option}.vueVersion`) as string;
-  script = config.get(`${option}.script`) as Script;
-  style = config.get(`${option}.style`) as Style;
-  componentName = config.get(`${option}.componentName`) as ComponentName;
-  sequence = config.get(`${option}.sequence`) as Sequence;
+  // 根据key来查找allTemplates中对应的模板配置
+  let flag = false;
+  for (let i = 0; i < allTemplates.length; i++) {
+    if (allTemplates[i].key === option) {
+      templateConfig = allTemplates[i];
+      flag = true;
+      break;
+    }
+  }
+  if (!flag) {
+    // 也就是说用户错误输入了模板名称
+    vscode.window.showErrorMessage(`模板${option}不存在`);
+  }
 }
 
-async function listenCreateFiles() {
+function listenCreateFiles() {
   // vscode.window.showInformationMessage("监听文件创建事件");
   vscode.workspace.onDidCreateFiles((event: vscode.FileCreateEvent) => {
     // vscode.window.showInformationMessage("created a file!");
@@ -82,6 +96,28 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("autovuetemplate.vt", vt)
   );
+  let disposable = vscode.commands.registerCommand(
+    "autovuetemplate.quickSelector",
+    () => {
+      const config = vscode.workspace.getConfiguration("autoVueTemplate");
+      let allTemplates = config.get("allTemplates") as allTemplates;
+      const names = allTemplates.map((template) => {
+        return template.name + ` [key=${template.key}]`;
+      });
+      vscode.window.showQuickPick(names).then((selectName) => {
+        
+        let option: TemplateConfig | undefined = allTemplates.find(template => template.name + ` [key=${template.key}]` === selectName);
+        if(!option) {
+          // vscode.window.showErrorMessage(`模板${selectName}不存在`);
+          return;
+        }
+        updateConfig(option);
+        vt();
+      });
+    }
+  );
+
+  context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is deactivated

@@ -3,8 +3,8 @@ interface Params {
   name: string; // 根据文件名填写组件的名称
   script: Script;
   style: Style;
-  componentName: ComponentName,
-  sequence: Sequence
+  componentName: ComponentName;
+  sequence: Sequence;
 }
 interface Script {
   lang: string;
@@ -19,4 +19,31 @@ interface ComponentName {
   isHump: boolean;
 }
 type Sequence = ("script" | "template" | "style")[];
-export { Params, Script, Style, ComponentName,Sequence };
+
+interface templateOption {
+  name: string;
+  option: string;
+  extend: string;
+}
+type allTemplates = Array<TemplateConfig>;
+
+interface TemplateConfig {
+  name: string,
+  key: string,
+  extend: string,
+  vueVersion: ("3"|"2"),
+  script: Script,
+  style: Style,
+  componentName: ComponentName,
+  sequence: Sequence,
+}
+export {
+  Params,
+  Script,
+  Style,
+  ComponentName,
+  Sequence,
+  allTemplates,
+  templateOption,
+  TemplateConfig
+};
