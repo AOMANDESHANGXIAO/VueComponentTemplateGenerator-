@@ -64,7 +64,7 @@
               },
               "componentName": {
                 "isExist": true,
-                "isHump": true
+                "isHump": false
               },
               "sequence": ["script", "template", "style"]
             },
@@ -82,9 +82,14 @@
               },
               "componentName": {
                 "isExist": true,
-                "isHump": true
+                "isHump": false
               },
               "sequence": ["template", "script", "style"]
+            },
+            {
+              "name": "自定义模板2",
+              "key":"customTemplate2",
+              "extend":"defaultVue3"
             }
           ]
         },
