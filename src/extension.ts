@@ -35,8 +35,8 @@ function extendTemplate(allTemplates: any) {
   // 解决继承问题
   // let parentTemplate: allTemplates;
   // 1. 用来保存所有应该继承的模板
-  let extendsTemplates = [];
-  let currentConfig = templateConfig;
+  let extendsTemplates: any = [];
+  let currentConfig: any = templateConfig;
   // 2. 找到应该继承的父亲
   let i = 0;
   while (true) {
@@ -47,7 +47,7 @@ function extendTemplate(allTemplates: any) {
     }
     // console.log('allTemplates===>', allTemplates);
     let parent = null;
-    allTemplates.forEach((item) => {
+    allTemplates.forEach((item: any) => {
       if (item.key === extendFrom) {
         parent = item;
         return;
@@ -65,7 +65,7 @@ function extendTemplate(allTemplates: any) {
   }
   // 3. 遍历这个列表将其与templateConfig进行合并
   let j = 0;
-  extendsTemplates.forEach((parent) => {
+  extendsTemplates.forEach((parent: any) => {
     // console.log(j, "parent===>", parent);
     // console.log(j++, "templateConfig===>", templateConfig);
     templateConfig = deepMerge(parent, templateConfig);

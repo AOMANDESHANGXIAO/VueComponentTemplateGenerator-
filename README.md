@@ -177,48 +177,58 @@ export default {
 
 **图2. 添加的自定义模板**
 
+最后，如何设置自定义的模板为你按下`ctrl`+`shift`+`t`以及文件创建时的默认模板呢？只需要新增一条配置项。将`autoVueTemplate.option`设置为你自定义模板的`key`属性值即可。注意，使用下拉列表选择模板后该配置项会自动更改为你选择的模板的`key`。
+
+```json
+{
+	"autoVueTemplate.option": "your template key"
+}
+```
+
 ### 2.4 模板继承
 
 觉得完整写自定义配置项很麻烦？我提供了一个模板继承的功能来简化操作。
 
-例如，当你只需要在默认的vue3模板的基础上新增使用`ts`和`less`的功能时，你可以这么写。
-
-
-
-## 3. 配置项
-
-### 3.1 通用配置项
+例如，当你只需要在默认的vue3模板的基础上在`script`标签中添加`lang = ts`以及在`style`标签中添加`lang = less`的功能时，你可以在`autoVueTemplate.allTemplates`配置列表中这么写。
 
 ```json
 {
-	"autoVueTemplate.auto": true, // 是否在创建文件后自动生成模板
-	"autoVueTemplate.option": "default", // 当前选择的是哪一套模板，默认为default
-    "autoVueTemplate.allTemplates": [ // 自定义的所有模板描述
-        {
-          "name": "default template", // 本插件提供的默认模板描述，显示在选择的下拉菜单中
-          "option": "default" // 模板选项，当autoVueTemplate.option与该值相同时，选择该模板
-        },
-        {
-          "name":"my template", // 自定义的默认模板
-          "option":"my"
-        }
-      ],
+  "name":"extend Test",
+  "key":"extendTest",
+  "extend":"defaultVue3", // 添加模板继承，会继承来自父级的所有参数。
+  "style": {
+    "lang": "less", // 覆盖来自父级的参数
+  },
+  "script": {
+    "lang": "ts", // 覆盖来自父级的参数
+  }
+},
+```
+
+这样一来，我们自定义的模板就会继承来自父级的所有配置项。另外，模板继承支持继承链。举个例子，`extendTest`模板继承自我们提供的默认`Vue3模板`。`extendTest2`继承自`extendTest`这一模板。这样一来`extendTest2`首先会使用`默认vue3`模板的配置项，再使用`extendTest`的配置项来替换`vue3默认模板`的配置项，最后使用自身的配置项。
+
+```json
+{
+  "name":"extend Test",
+  "key":"extendTest",
+  "extend":"defaultVue3",
+  "style": {
+    "lang": "less",
+  },
+  "script": {
+    "lang": "ts",
+  }
+},
+{
+  "name":"extend Test2",
+  "key":"extendTest2",
+  "extend":"extendTest",
+  "style": {
+    "lang": "sass",
+  }
 }
 ```
 
-## 配置可选项
+## 3. 结语
 
-| 参数                 | 描述                                                         | 可选项                     | 默认值                          |
-| -------------------- | ------------------------------------------------------------ | -------------------------- | ------------------------------- |
-| vueVersion           | 控制生成的是vue2还是vue3的代码                               | 2 \| 3                     | 3                               |
-| script.lang          | 控制生成的script标签中的编程语言选项                         | ''\|'js'\|'ts'             | ''                              |
-| script.setup         | 只有vueVersion为3时才有效，为script标签带上setup选项         | true \| false              | true                            |
-| style.name           | 控制生成的style标签中的css预处理器                           | ''\|'scss'\|'sass'\|'less' | ''                              |
-| style.scoped         | 控制生成的style标签中是否携带scoped选项                      | true \| false              | false                           |
-| componentName.isOpen | 控制生成的组件模板是否在选项里根据你的文件名生成name         | true \| false              | false                           |
-| componentName.isHump | 生成的组件名称是否以驼峰命名，如果为false，则生成的组件名会以 - 连接。将你已驼峰命名法命名的组件名自动转换为以-相连 | true \| false              | false                           |
-| auto                 | 当你创建文件后，是否根据你的配置自动生成组件模板             | true \| false              | true                            |
-| sequence             | 控制创建的`script`,`template`,`style`标签的顺序。你可以传入一个数组来控制他们的创建顺序。例如：['script', 'template', 'style']表示依次创建`script`,`template`,`style`这三个标签。 | -                          | ['script', 'template', 'style'] |
-| option               | 我们允许您配置多套模板，option用于控制您默认选择哪一套模板。 | -                          | “default”                       |
-| allTemplates         | 该选项为一个数组，您需要将配置的模板以数组元素的形式填入到这一选项中。数组元素的格式为：{`name`: string, `option`: string, `extend`: string}。name是自定义模板的名称，在您按下`ctrl`+`shift`+`p`时可以看到这些名称，并进行选择。option是你自定义模板的选项，可以认为是自定义模板的索引。extend表示该模板继承自哪一套模板，如果本模板中的配置项不全，则我们会根据其继承的模板补齐配置项。如果不填写或者取值为空字符串，则不发生继承。允许继承链的存在。 | -                          | “”                              |
-
+enjoy!😊

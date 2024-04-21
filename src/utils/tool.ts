@@ -34,14 +34,14 @@ function getCurrentFileName(componentName: ComponentName, newFileName: string) {
 
 
 // 是否是引用类型，具体指使用typeof类型为object，并且不是null的值
-function isObjectLike(value) {
+function isObjectLike(value:any) {
   return typeof value === "object" && value !== null;
 }
 const toString = Object.prototype.toString;
-function getTag(value) {
+function getTag(value:any) {
   return toString.call(value);
 }
-function isPlainObject(value) {
+function isPlainObject(value:any) {
   if (!isObjectLike(value) || getTag(value) != "[object Object]") {
     return false;
   }
@@ -57,7 +57,7 @@ function isPlainObject(value) {
   return Object.getPrototypeOf(value) === proto;
 }
 
-function deepMerge(obj1, obj2) {
+function deepMerge(obj1:any, obj2:any) {
   let isPlain1 = isPlainObject(obj1);
   let isPlain2 = isPlainObject(obj2);
   if (!isPlain1) {
