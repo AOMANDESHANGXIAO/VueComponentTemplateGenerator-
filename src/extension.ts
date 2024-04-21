@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getCurrentFileName } from "./utils/tool";
+import { getCurrentFileName, deepMerge } from "./utils/tool";
 import { generateTemplate } from "./utils/index";
 import { Params, allTemplates, TemplateConfig } from "./types/index";
 
@@ -33,18 +33,44 @@ const vt = () => {
 // 模板继承
 function extendTemplate(allTemplates: any) {
   // 解决继承问题
-  let parentTemplate: allTemplates;
-
-  // 继承链进行继承
-  let pointer = templateConfig;
-  while (pointer.extend) {
-    parentTemplate = allTemplates.find((item) => item.key === pointer.extend);
-    pointer = parentTemplate;
-    vscode.window.showInformationMessage("1" + parentTemplate.name);
-    if (parentTemplate) {
-      templateConfig = { ...parentTemplate, ...templateConfig };
+  // let parentTemplate: allTemplates;
+  // 1. 用来保存所有应该继承的模板
+  let extendsTemplates = [];
+  let currentConfig = templateConfig;
+  // 2. 找到应该继承的父亲
+  let i = 0;
+  while (true) {
+    // console.log("=====>", i++);
+    let extendFrom = currentConfig?.extend;
+    if (!extendFrom) {
+      break;
     }
+    // console.log('allTemplates===>', allTemplates);
+    let parent = null;
+    allTemplates.forEach((item) => {
+      if (item.key === extendFrom) {
+        parent = item;
+        return;
+      }
+    });
+    // console.log("parent ===>", parent);
+
+    if (parent) {
+      // 找到父亲
+      console.log("found it");
+      extendsTemplates.push(parent);
+      // 找到父亲的父亲
+    }
+    currentConfig = parent;
   }
+  // 3. 遍历这个列表将其与templateConfig进行合并
+  let j = 0;
+  extendsTemplates.forEach((parent) => {
+    // console.log(j, "parent===>", parent);
+    // console.log(j++, "templateConfig===>", templateConfig);
+    templateConfig = deepMerge(parent, templateConfig);
+  });
+  // console.log("templateConfig========>", templateConfig);
 }
 
 function updateConfig(selectOption: any = null) {
@@ -52,10 +78,12 @@ function updateConfig(selectOption: any = null) {
   let allTemplates = config.get("allTemplates") as allTemplates;
   if (selectOption) {
     // vscode.window.showInformationMessage(">>>选择模板成功<<<")
-    templateConfig = selectOption;
-    extendTemplate(allTemplates);
-    // 把设置中的选项也更新
     const config = vscode.workspace.getConfiguration("autoVueTemplate");
+    templateConfig = selectOption;
+    if (templateConfig.extend !== "") {
+      extendTemplate(allTemplates);
+    }
+    // 把设置中的选项也更新
     config.update("option", selectOption.key, true);
     return;
   }
